@@ -1,4 +1,4 @@
-create table Accounts (
+CREATE TABLE Accounts (
   accountId   VARCHAR(50) NOT NULL,
   password    VARCHAR(50),
   manager     VARCHAR(50),
@@ -12,9 +12,9 @@ create table Accounts (
   accessed    BIGINT,
   salary      DECIMAL(9,2),
   jpegphoto   BLOB,
-  activate    DATE,  
-  opentime    TIME,      
-  enrolled    TIMESTAMP,      
+  activate    DATE,
+  opentime    TIME,
+  enrolled    TIMESTAMP,
   changed     TIMESTAMP NOT NULL,
   changelog   BIGINT
-)
+);

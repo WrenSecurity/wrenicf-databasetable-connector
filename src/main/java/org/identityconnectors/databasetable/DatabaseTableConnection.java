@@ -1,22 +1,22 @@
 /*
  * ====================
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
- * Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.     
- * 
- * The contents of this file are subject to the terms of the Common Development 
- * and Distribution License("CDDL") (the "License").  You may not use this file 
+ *
+ * Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License("CDDL") (the "License").  You may not use this file
  * except in compliance with the License.
- * 
- * You can obtain a copy of the License at 
+ *
+ * You can obtain a copy of the License at
  * http://IdentityConnectors.dev.java.net/legal/license.txt
- * See the License for the specific language governing permissions and limitations 
- * under the License. 
- * 
+ * See the License for the specific language governing permissions and limitations
+ * under the License.
+ *
  * When distributing the Covered Code, include this CDDL Header Notice in each file
  * and include the License file at identityconnectors/legal/license.txt.
- * If applicable, add the following below this CDDL Header, with the fields 
- * enclosed by brackets [] replaced by your own identifying information: 
+ * If applicable, add the following below this CDDL Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  * ====================
  */
@@ -35,7 +35,7 @@ import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
+import org.identityconnectors.common.IOUtil;
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.common.security.GuardedString;
@@ -65,7 +65,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * Get the instance method
-     * 
+     *
      * @param config
      *            a {@link DatabaseTableConfiguration} object
      * @return a new {@link DatabaseTableConnection} connection
@@ -151,7 +151,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
     /**
      * Use the {@link Configuration} passed in to immediately connect to a database. If the {@link Connection} fails a
      * {@link RuntimeException} will be thrown.
-     * 
+     *
      * @param conn
      *            Connection created in the time of calling the newConnection
      * @param config
@@ -168,7 +168,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * The strategy utility
-     * 
+     *
      * @param conn
      * @param config
      * @return the created strategy
@@ -180,7 +180,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
         MappingStrategy tail = new JdbcConvertor(new DefaultStrategy());
         if (!config.isAllNative()) {
             log.info("Append: StringStrategy");
-            // Backward compatibility is to read and write as string all attributes which make sance to read 
+            // Backward compatibility is to read and write as string all attributes which make sance to read
             tail = new StringStrategy(tail);
             // Native timestamps will read as timestamp and convert to String
             if (config.isNativeTimestamps()) {
@@ -195,7 +195,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * Get the Column Values map
-     * 
+     *
      * @param result
      * @return the result of Column Values map
      * @throws SQLException
@@ -206,7 +206,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * Accessor for the sms property
-     * 
+     *
      * @return the sms
      */
     public MappingStrategy getSms() {
@@ -215,7 +215,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * Indirect call of prepareCall statement with mapped callable statement parameters
-     * 
+     *
      * @param sql
      *            a <CODE>String</CODE> sql statement definition
      * @param params
@@ -235,7 +235,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
 
     /**
      * Indirect call of prepare statement with mapped prepare statement parameters
-     * 
+     *
      * @param sql
      *            a <CODE>String</CODE> sql statement definition
      * @param params
@@ -263,7 +263,7 @@ public class DatabaseTableConnection extends DatabaseConnection {
     @Override
     public void test() {
         String sql = config.getValidConnectionQuery();
-        
+
         // attempt through auto commit..
         if (StringUtil.isBlank(sql)) {
             log.info("valid connection query is empty, test connection using default");
@@ -278,29 +278,29 @@ public class DatabaseTableConnection extends DatabaseConnection {
                     // should have thrown if server was down don't get the
                     // ResultSet, we don't want it if we got to this point and
                     // the SQL was not a query, give a hint why we failed
-                    throw new ConnectorException(config.getMessage(MSG_QUERY_INVALID, sql));                            
+                    throw new ConnectorException(config.getMessage(MSG_QUERY_INVALID, sql));
                 }
-                log.ok("connection is valid");                
+                log.ok("connection is valid");
             } catch (Exception ex) {
                 // anything, not just SQLException
                 // nothing to do, just invalidate the connection
                 throw new ConnectorException(config.getMessage(MSG_CAN_NOT_READ, sql), ex);
             } finally {
-                SQLUtil.closeQuietly(stmt);
+                IOUtil.quietClose(stmt);
             }
-        }        
+        }
     }
 
     /**
      * Setter for the sms
-     * 
+     *
      * @param sms
      *            the strategy
      */
     void setSms(MappingStrategy sms) {
         this.sms = sms;
     }
-    
+
     /**
      * Close connection if pooled
      */
@@ -319,5 +319,5 @@ public class DatabaseTableConnection extends DatabaseConnection {
             log.info("Get new connection, it is closed");
             setConnection(getNativeConnection(config));
         }
-    }    
+    }
 }
