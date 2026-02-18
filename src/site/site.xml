@@ -1,59 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
- ! CCPL HEADER START
- !
- ! This work is licensed under the Creative Commons
- ! Attribution-NonCommercial-NoDerivs 3.0 Unported License.
- ! To view a copy of this license, visit
- ! http://creativecommons.org/licenses/by-nc-nd/3.0/
- ! or send a letter to Creative Commons, 444 Castro Street,
- ! Suite 900, Mountain View, California, 94041, USA.
- !
- ! See the License for the specific language governing permissions
- ! and limitations under the License.
- !
- ! If applicable, add the following below this CCPL HEADER, with the fields
- ! enclosed by brackets "[]" replaced with your own identifying information:
- !      Portions Copyright [yyyy] [name of copyright owner]
- !
- ! CCPL HEADER END
- !
- !      Copyright 2012-2015 ForgeRock AS.
- !
+    The contents of this file are subject to the terms of the Common Development and
+    Distribution License (the License). You may not use this file except in compliance with the
+    License.
+
+    You can obtain a copy of the License at legal/CDDLv1.1.txt. See the License for the
+    specific language governing permission and limitations under the License.
+
+    When distributing Covered Software, include this CDDL Header Notice in each file and include
+    the License file at legal/CDDLv1.1.txt. If applicable, add the following below the CDDL
+    Header, with the fields enclosed by brackets [] replaced by your own identifying
+    information: "Portions copyright [year] [name of copyright owner]".
+
+    Copyright 2025 Wren Security
 -->
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd">
+    <publishDate position="right" />
+    <version position="right" />
 
-<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
     <skin>
-        <groupId>org.forgerock.commons</groupId>
-        <artifactId>forgerock-community-skin</artifactId>
-        <version>1.0.0</version>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>2.1.0</version>
     </skin>
-    <publishDate position="right" format="yyyy.MM.dd"/>
-    <version position="right"/>
-    <googleAnalyticsAccountId>UA-23412190-10</googleAnalyticsAccountId>
+
     <body>
-        <menu name="Overview" img="images/arrow_right.png">
-            <item name="Introduction" href="openicf-report.html"/>
-        </menu>
+        <breadcrumbs>
+            <item name="Wren Security" href="https://wrensecurity.org" />
+        </breadcrumbs>
 
-        <menu name="Connector Core Docs">
-            <item name="All Formats" href="docs.html" />
-            <!--item name="Release Notes" href="./doc/release-notes/index.html" /-->
-            <item name="Installation Guide" href="./doc/bootstrap/${project.artifactId}-${project.version}/index.html" />
-        </menu>
-
-        <menu ref="reports"/>
+        <menu ref="reports" />
     </body>
-    <custom>
-        <googleAnalytics>UA-23412190-10</googleAnalytics>
-        <openproject>
-            <href>http://openicf.forgerock.org</href>
-            <src>images/openicf-tagline-195x65.png</src>
-            <alt>OpenICF</alt>
-        </openproject>
-        <siteSearchFQDN>forgerock.org</siteSearchFQDN>
-    </custom>
-</project>
+</site>

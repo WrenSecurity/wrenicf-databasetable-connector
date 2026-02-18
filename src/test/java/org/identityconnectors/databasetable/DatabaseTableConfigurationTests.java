@@ -1,42 +1,41 @@
 /*
  * ====================
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
- * Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.     
- * 
- * The contents of this file are subject to the terms of the Common Development 
- * and Distribution License("CDDL") (the "License").  You may not use this file 
+ *
+ * Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License("CDDL") (the "License").  You may not use this file
  * except in compliance with the License.
- * 
- * You can obtain a copy of the License at 
+ *
+ * You can obtain a copy of the License at
  * http://IdentityConnectors.dev.java.net/legal/license.txt
- * See the License for the specific language governing permissions and limitations 
- * under the License. 
- * 
+ * See the License for the specific language governing permissions and limitations
+ * under the License.
+ *
  * When distributing the Covered Code, include this CDDL Header Notice in each file
  * and include the License file at identityconnectors/legal/license.txt.
- * If applicable, add the following below this CDDL Header, with the fields 
- * enclosed by brackets [] replaced by your own identifying information: 
+ * If applicable, add the following below this CDDL Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ * Portions Copyright 2025 Wren Security.
  * ====================
  */
 package org.identityconnectors.databasetable;
 
-import static org.testng.AssertJUnit.assertEquals;
-import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.identityconnectors.common.security.GuardedString;
 import org.identityconnectors.test.common.TestHelpers;
+import org.junit.jupiter.api.Test;
 
 /**
  * Attempts to test the Connector with the framework.
  */
 public class DatabaseTableConfigurationTests {
-   
-    /**
-     * Derby's embedded driver.
-     */
-    static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+
+    static final String DRIVER = "org.h2.Driver";
     static final String USER = "tstUser";
     static final GuardedString PASSWORD = new GuardedString("tstPAssword".toCharArray());
     static final String DBTABLE = "tstTable";
@@ -46,8 +45,8 @@ public class DatabaseTableConfigurationTests {
     static final String KEYCOLUMN = "tstKeyColumn";
     static final String PASSDCOLUMN = "tstPasswordColumn";
     static final String CHANGELOG = "tstChangelogColumn";
-    static final String URL = "jdbc:derby:@tstHost:8000:tstDatabase";
-    static final String URLTEMPLATE = "jdbc:derby:@%h:%p:%d";
+    static final String URL = "jdbc:h2:tcp://tstHost:8000/tstDatabase";
+    static final String URLTEMPLATE = "jdbc:h2:tcp://%h:%p/%d";
 
     /**
     * The configuration
@@ -68,39 +67,27 @@ public class DatabaseTableConfigurationTests {
         config.setJdbcUrlTemplate(URLTEMPLATE);
         config.setConnectorMessages(TestHelpers.createDummyMessages());
         return config;
-    }    
+    }
 
-    /**
-     * test method
-     */
     @Test
     public void testConfiguration() {
         // attempt to test driver info..
         DatabaseTableConfiguration config = getConfiguration();
-        // check defaults..
         config.validate();
-    }   
-    
-    /**
-     * test method
-     */
+    }
+
     @Test
     public void testFormatUrl() {
         // attempt to test driver info..
         DatabaseTableConfiguration config = getConfiguration();
-        // check defaults..
         final String url = config.formatUrlTemplate();
         assertEquals(URL, url);
-    }    
-    
-    /**
-     * test method
-     */
+    }
+
     @Test
     public void testGetSetTheProperties() {
         // attempt to test driver info..
         DatabaseTableConfiguration config = getConfiguration();
-        // check defaults..
         config.setAllNative(true);
         assertEquals(true, config.isAllNative());
         config.setChangeLogColumn("TST");
@@ -135,84 +122,67 @@ public class DatabaseTableConfigurationTests {
         assertEquals("USR", config.getUser());
         config.setValidConnectionQuery("VALID");
         assertEquals("VALID", config.getValidConnectionQuery());
-    }       
+    }
 
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testConfigurationEmptyHost() {
         // attempt to test driver info..
         DatabaseTableConfiguration config = getConfiguration();
         config.setHost("");
-        // check defaults..
-        config.validate();
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
     }
 
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testConfigurationEmptyPort() {
         DatabaseTableConfiguration config = getConfiguration();
         config.setPort("");
-        // check defaults..
-        config.validate();
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
     }
-        
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+
+    @Test
     public void testConfigurationEmptyDatabase() {
         DatabaseTableConfiguration config = getConfiguration();
         config.setDatabase("");
-        // check defaults..
-        config.validate();
-        AssertJUnit.fail("empty database");
-    }   
-    
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
+    }
+
+    @Test
     public void testConfigurationKeyEQPassword() {
         DatabaseTableConfiguration config = getConfiguration();
         config.setKeyColumn("a");
         config.setPasswordColumn("a");
-        // check defaults..
-        config.validate();
-        AssertJUnit.fail("testConfigurationKeyEQPassword");
-    }  
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
+    }
 
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testConfigurationKeyEQChange() {
         DatabaseTableConfiguration config = getConfiguration();
         config.setKeyColumn("a");
         config.setChangeLogColumn("a");
-        // check defaults..
-        config.validate();
-        AssertJUnit.fail("testConfigurationKeyEQChange");
-    } 
-    /**
-     * test method
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
+    }
+
+    @Test
     public void testConfigurationPasswdEQChange() {
         DatabaseTableConfiguration config = getConfiguration();
         config.setPasswordColumn("a");
         config.setChangeLogColumn("a");
         // check defaults..
-        config.validate();
-        AssertJUnit.fail("testConfigurationPasswdEQChange");
-    }      
-    
-    /**
-     * test method
-     */
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
+    }
+
     @Test
     public void testConfigurationDataSource() {
         // attempt to test driver info..
@@ -220,11 +190,8 @@ public class DatabaseTableConfigurationTests {
         // check defaults..
         config.setDatasource("DS");
         config.validate();
-    }    
-    
-    /**
-     * test method
-     */
+    }
+
     @Test
     public void testConfigurationJndi() {
         // attempt to test driver info..
@@ -233,27 +200,24 @@ public class DatabaseTableConfigurationTests {
 
         config.setDatasource("DS");
         assertEquals("DS", config.getDatasource());
-        
+
         final String[] tstpr = {"a=A","b=B"};
         config.setJndiProperties(tstpr);
         assertEquals(tstpr[0], config.getJndiProperties()[0]);
         assertEquals(tstpr[1], config.getJndiProperties()[1]);
 
-        config.validate();      
-    }   
-    
-    /**
-     * test method
-     */
-    @Test(expectedExceptions=IllegalArgumentException.class)
+        config.validate();
+    }
+
+    @Test
     public void testConfigurationInvalidJndi() {
         // attempt to test driver info..
         DatabaseTableConfiguration config = getConfiguration();
-        // check defaults..
-
-        config.setDatasource("DS");      
+        config.setDatasource("DS");
         final String[] tstpr = {"a=A","b"};
         config.setJndiProperties(tstpr);
-        config.validate();      
+        assertThrows(IllegalArgumentException.class, () -> {
+            config.validate();
+        });
     }
 }
